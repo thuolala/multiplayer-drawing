@@ -1,6 +1,16 @@
+const socket = io(); // Connect to the socket server
+
+// Room ID
+let roomId;
+
+// Join Room Button
+document.getElementById("joinRoom").addEventListener("click", () => {
+    roomId = document.getElementById("roomId").value;
+    socket.emit('joinRoom', roomId);
+});
+
 const canvas = document.getElementById("artboard");
 const ctx = canvas.getContext("2d");
-const socket = io(); // Connect to the socket server
 let drawing = false;
 let isEraser = false;
 let brushColor = "#000000"; // Store the current brush color
@@ -42,7 +52,7 @@ function draw(event) {
     ctx.moveTo(pos.x, pos.y);
 
     // Emit drawing data to the server
-    socket.emit("drawing", pos);
+    socket.emit("drawing", pos, roomId);
 }
 
 // Listen for drawing events from other clients
