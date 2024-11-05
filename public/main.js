@@ -1,20 +1,24 @@
 const socket = io(); // Connect to the socket server
 
-// Room ID
-let roomId;
-
-// Join Room Button
-document.getElementById("joinRoom").addEventListener("click", () => {
-    roomId = document.getElementById("roomId").value;
-    socket.emit('joinRoom', roomId);
-});
-
 const canvas = document.getElementById("artboard");
 const ctx = canvas.getContext("2d");
 let drawing = false;
 let isEraser = false;
 let brushColor = "#000000"; // Store the current brush color
 const backgroundColor = "#FFFFFF"; // Canvas background color
+
+// Initialize the color wheel
+const colorPicker = new iro.ColorPicker("#colorWheel", {
+    width: 150, // Size of the color wheel
+    //color: "#000000", // Initial color
+});
+
+// Update the brush color when the color wheel changes
+colorPicker.on("color:change", (color) => {
+    brushColor = color.hexString;
+    ctx.strokeStyle = brushColor;
+    isEraser = false; // Disable eraser when color changes
+});
 
 // Set initial properties
 ctx.lineWidth = 5;
@@ -34,25 +38,32 @@ canvas.addEventListener("mousedown", () => {
     drawing = true;
     saveState(); // Save state before starting to draw
 });
+
 canvas.addEventListener("mouseup", () => {
     drawing = false;
     ctx.beginPath(); // Start a new path after each stroke
+    saveState(); // Save state when finishing a stroke
 });
+
 canvas.addEventListener("mousemove", draw);
 
 function draw(event) {
     if (!drawing) return;
 
-    ctx.strokeStyle = isEraser ? backgroundColor : brushColor; // Set stroke color based on eraser or brush mode
+    const rect = canvas.getBoundingClientRect(); // Lấy kích thước và vị trí của canvas
+    const pos = {
+        x: event.clientX - rect.left, // Tính toán toạ độ theo canvas
+        y: event.clientY - rect.top,
+    };
 
-    const pos = { x: event.clientX - canvas.offsetLeft, y: event.clientY - canvas.offsetTop };
+    ctx.strokeStyle = isEraser ? backgroundColor : brushColor; // Thiết lập màu vẽ
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
 
     // Emit drawing data to the server
-    socket.emit("drawing", pos, roomId);
+    socket.emit("drawing", pos);
 }
 
 // Listen for drawing events from other clients
@@ -68,12 +79,12 @@ socket.on("drawing", (data) => {
 function saveState() {
     // Push the current canvas image to the undo stack
     undoStack.push(canvas.toDataURL());
-    // Clear the redo stack
+    // Clear the redo stack whenever a new action is performed
     redoStack = [];
 }
 
 // Color Picker
-document.getElementById("colorPicker").addEventListener("input", (event) => {
+document.getElementById("colorWheel").addEventListener("input", (event) => {
     brushColor = event.target.value;
     ctx.strokeStyle = brushColor;
     isEraser = false; // Disable eraser when color is changed
@@ -129,7 +140,8 @@ document.getElementById("saveImage").addEventListener("click", () => {
 document.getElementById("undo").addEventListener("click", () => {
     if (undoStack.length > 0) {
         // Push the current state to redo stack before undoing
-        redoStack.push(undoStack.pop());
+        const lastState = undoStack.pop();
+        redoStack.push(lastState); // Store the last undone state
         restoreState();
     }
 });
@@ -137,8 +149,10 @@ document.getElementById("undo").addEventListener("click", () => {
 // Redo Function
 document.getElementById("redo").addEventListener("click", () => {
     if (redoStack.length > 0) {
-        undoStack.push(redoStack.pop());
-        restoreState();
+        // Restore the last state from redo stack
+        const lastRedoState = redoStack.pop(); // Get the last redo state
+        undoStack.push(lastRedoState); // Push it back to undo stack
+        restoreState(); // Restore the redo state
     }
 });
 

@@ -1,8 +1,23 @@
+body{
+    
+}
+
+.container-fluid{
+    background-image: url('./assets/img/bg1.png');
+    background-color: black;
+}
+
 .artboard-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    flex-direction: column;
+}
+
+#artboard {
+    border: 1px solid #ccc; /* Để dễ thấy viền canvas */
+    display: block; /* Đảm bảo canvas là block element */
+    margin: 0 auto; /* Căn giữa canvas */
 }
 
 canvas {
@@ -15,4 +30,80 @@ canvas {
     margin-top: 10px;
     display: flex;
     gap: 10px;
+}
+
+.left{
+    /* background-color: gray; */
+    gap: 10px;
+}
+
+.right{
+    /* background-color: gray; */
+    gap: 10px;
+}
+
+#colorWheel {
+
+}
+
+#brushTool{
+    display: flex;        
+    justify-content: center;  
+    align-items: center; 
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+#eraserTool{
+    display: flex;        
+    justify-content: center;  
+    align-items: center; 
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+}
+
+#brushTool:focus{
+    background-color: blue;
+}
+
+#undo{
+    display: flex;        
+    justify-content: center;  
+    align-items: center; 
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+#redo{
+    display: flex;          
+    justify-content: center;  
+    align-items: center; 
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.img-btn{
+    width: auto;
+}
+
+#clearCanvas{
+    width: 70px;
+    height: 50px;
+    border-radius: 5px;
+}
+
+#saveImage{
+    width: 70px;
+    height: 50px; 
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+}
+
+input[type='range'] {
+    accent-color: black;
 }

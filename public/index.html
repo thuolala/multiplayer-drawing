@@ -1,29 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multiplayer Artboard</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="./style.css">
+
     <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jaames/iro@5.5.2/dist/iro.min.js"></script>
     <script src="./main.js" defer></script>
 </head>
+
 <body>
-    <div class="artboard-container">
-        <input type="text" id="roomId" placeholder="Enter Room ID">
-        <button id="joinRoom">Join Room</button>
-        <canvas id="artboard" width="1000" height="600"></canvas>
-        <div class="controls">
-            <button id="brushTool">Brush</button>
-            <button id="eraserTool">Eraser</button>
-            <label>Color: <input type="color" id="colorPicker" value="#000000"></label>
-            <label>Brush Size: <input type="range" id="brushSize" min="1" max="20" value="5"></label>
-            <button id="clearCanvas">Clear</button>
-            <button id="saveImage">Save</button>
-            <button id="undo">Undo</button>
-            <button id="redo">Redo</button>
+    <div class="container-fluid vh-100 d-flex align-items-center justify-content-center">
+        <div class="row w-100">
+            <div class="col-2 d-flex flex-column align-items-center left">
+                <div style="margin-top: 20px; gap: 10px;" class="row">
+                    <button id="brushTool"><img src="./assets/img/paintbrush.png" class="img-btn"></button>
+                    <button id="eraserTool"><img src="./assets/img/eraser.png" class="img-btn"></button>
+                </div>
+                <div id="colorWheel"></div>
+                <label class="text-white">Size: <input type="range" id="brushSize" min="1" max="100" value="5" class="size"></label>
+            </div>
+
+            <div class="col-8">
+                <canvas id="artboard" width="1000" height="600" class="border"></canvas>
+            </div>
+
+            <div class="col-2 d-flex flex-column align-items-center right">
+                <div style="margin-top: 20px; gap: 10px;" class="row">
+                    <button id="undo"><img src="./assets/img/undo.png" class="img-btn"></button>
+                    <button id="redo"><img src="./assets/img/redo.png" class="img-btn"></button>
+                </div>
+                <div style="margin-top: 20px; gap: 10px;" class="row">
+                    <button id="clearCanvas">Clear</button>
+                    <button id="saveImage">Save</button>
+                </div>
+            </div>
         </div>
     </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </body>
+
 </html>
